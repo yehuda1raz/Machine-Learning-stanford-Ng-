@@ -10,7 +10,7 @@ function [C, sigma] = dataset3Params(X, y, Xval, yval)
 % You need to return the following variables correctly.
 C = 1;
 sigma = 0.3;
-
+m = size(Xval, 1);
 % ====================== YOUR CODE HERE ======================
 % Instructions: Fill in this function to return the optimal C and sigma
 %               learning parameters found using the cross validation set.
@@ -23,9 +23,21 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
-
-
-
+pram = [00.1 0.03 0.1 0.3 1 3 10 30];
+n = length(pram);
+error_val = 10;
+predictions = zeros(m,1);
+for i = 1:(n)
+	for j = 1:(n)
+		model= svmTrain(X, y, pram(i), @(x1, x2) gaussianKernel(x1, x2, pram(j))); 
+		predictions = svmPredict(model, Xval);
+		if error_val > mean(double(predictions ~= yval))	
+			error_val = mean(double(predictions ~= yval))
+			C = pram(i);
+			sigma = pram(j);
+		end	
+	end
+end
 
 
 
